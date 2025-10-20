@@ -53,7 +53,7 @@ export class GoalsService {
   async contribute(userId: string, id: string, dto: ContributeDto) {
     const goal = await this.findOne(userId, id);
 
-    // crear contribución
+    
     const c = this.contribRepo.create({
       goalId: goal.id,
       amount: dto.amount,
@@ -61,7 +61,7 @@ export class GoalsService {
     });
     await this.contribRepo.save(c);
 
-    // actualizar currentAmount (+) y marcar completada si corresponde
+    
     const current = parseFloat(goal.currentAmount || '0');
     const next = (current + parseFloat(dto.amount)).toFixed(2);
     goal.currentAmount = String(next);
@@ -78,3 +78,4 @@ export class GoalsService {
     return this.contribRepo.find({ where: { goalId: id }, order: { date: 'DESC' } });
   }
 }
+
