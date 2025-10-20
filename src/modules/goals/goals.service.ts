@@ -16,7 +16,7 @@ export class GoalsService {
 
   async findAll(userId: string, status?: GoalStatus, q?: string, skip = 0, take = 100) {
     const where: FindOptionsWhere<Goal> = { userId, ...(status ? { status } : {}) };
-    if (q) (where as any).title = () => `title ILIKE '%${q}%'`; 
+    if (q) (where as any).title = () => `title ILIKE '%${q}%'`; // búsqueda simple
     return this.goalsRepo.find({ where, order: { createdAt: 'DESC' }, skip, take });
   }
 
@@ -53,7 +53,7 @@ export class GoalsService {
   async contribute(userId: string, id: string, dto: ContributeDto) {
     const goal = await this.findOne(userId, id);
 
-    
+    // crear contribución
     const c = this.contribRepo.create({
       goalId: goal.id,
       amount: dto.amount,
@@ -61,7 +61,7 @@ export class GoalsService {
     });
     await this.contribRepo.save(c);
 
-    
+    // actualizar currentAmount (+) y marcar completada si corresponde
     const current = parseFloat(goal.currentAmount || '0');
     const next = (current + parseFloat(dto.amount)).toFixed(2);
     goal.currentAmount = String(next);
@@ -78,5 +78,3 @@ export class GoalsService {
     return this.contribRepo.find({ where: { goalId: id }, order: { date: 'DESC' } });
   }
 }
-
-
