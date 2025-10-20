@@ -16,7 +16,7 @@ export class GoalsService {
 
   async findAll(userId: string, status?: GoalStatus, q?: string, skip = 0, take = 100) {
     const where: FindOptionsWhere<Goal> = { userId, ...(status ? { status } : {}) };
-    if (q) (where as any).title = () => `title ILIKE '%${q}%'`; // búsqueda simple
+    if (q) (where as any).title = () => `title ILIKE '%${q}%'`; 
     return this.goalsRepo.find({ where, order: { createdAt: 'DESC' }, skip, take });
   }
 
@@ -78,4 +78,5 @@ export class GoalsService {
     return this.contribRepo.find({ where: { goalId: id }, order: { date: 'DESC' } });
   }
 }
+
 
