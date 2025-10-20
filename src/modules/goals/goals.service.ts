@@ -14,10 +14,21 @@ export class GoalsService {
     @InjectRepository(GoalContribution) private contribRepo: Repository<GoalContribution>,
   ) {}
 
-  async findAll(userId: string, status?: GoalStatus, q?: string, skip = 0, take = 100) {
+  async findAll(
+    userId: string,
+    status?: GoalStatus,
+    q?: string,
+    skip = 0,
+    take = 100,
+  ) {
     const where: FindOptionsWhere<Goal> = { userId, ...(status ? { status } : {}) };
-    if (q) (where as any).title = () => `title ILIKE '%${q}%'`; // búsqueda simple
-    return this.goalsRepo.find({ where, order: { createdAt: 'DESC' }, skip, take });
+    if (q) (where as any).title = () => `title ILIKE '%${q}%'`;
+    return this.goalsRepo.find({
+      where,
+      order: { createdAt: 'DESC' },
+      skip,
+      take,
+    });
   }
 
   async findOne(userId: string, id: string) {
@@ -38,10 +49,14 @@ export class GoalsService {
     return this.goalsRepo.save(goal);
   }
 
+  
   async update(userId: string, id: string, dto: UpdateGoalDto) {
-    const goal = await this.findOne(userId, id);
-    Object.assign(goal, dto);
-    return this.goalsRepo.save(goal);
+    await this.findOne(userId, id); 
+
+    const res = await this.goalsRepo.update({ id, userId }, dto as any);
+    if (!res.affected) throw new NotFoundException('Goal not found');
+
+    return this.findOne(userId, id); 
   }
 
   async remove(userId: string, id: string) {
@@ -53,7 +68,7 @@ export class GoalsService {
   async contribute(userId: string, id: string, dto: ContributeDto) {
     const goal = await this.findOne(userId, id);
 
-    // crear contribución
+    
     const c = this.contribRepo.create({
       goalId: goal.id,
       amount: dto.amount,
@@ -61,7 +76,7 @@ export class GoalsService {
     });
     await this.contribRepo.save(c);
 
-    // actualizar currentAmount (+) y marcar completada si corresponde
+    
     const current = parseFloat(goal.currentAmount || '0');
     const next = (current + parseFloat(dto.amount)).toFixed(2);
     goal.currentAmount = String(next);
@@ -75,6 +90,10 @@ export class GoalsService {
 
   async contributions(userId: string, id: string) {
     await this.findOne(userId, id);
-    return this.contribRepo.find({ where: { goalId: id }, order: { date: 'DESC' } });
+    return this.contribRepo.find({
+      where: { goalId: id },
+      order: { date: 'DESC' },
+    });
   }
 }
+
