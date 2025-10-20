@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Put,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GoalsService } from './goals.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
@@ -11,8 +23,20 @@ export class GoalsController {
   constructor(private readonly goalsService: GoalsService) {}
 
   @Get()
-  findAll(@Req() req, @Query('status') status?: 'ACTIVE'|'COMPLETED'|'PAUSED', @Query('q') q?: string, @Query('skip') skip?: number, @Query('take') take?: number) {
-    return this.goalsService.findAll(req.user.id, status, q, Number(skip) || 0, Number(take) || 100);
+  findAll(
+    @Req() req,
+    @Query('status') status?: 'ACTIVE' | 'COMPLETED' | 'PAUSED',
+    @Query('q') q?: string,
+    @Query('skip') skip?: number,
+    @Query('take') take?: number,
+  ) {
+    return this.goalsService.findAll(
+      req.user.id,
+      status as any,
+      q,
+      Number(skip) || 0,
+      Number(take) || 100,
+    );
   }
 
   @Post()
@@ -25,8 +49,15 @@ export class GoalsController {
     return this.goalsService.findOne(req.user.id, id);
   }
 
+  
+  @Patch(':id')
+  updatePatch(@Req() req, @Param('id') id: string, @Body() dto: UpdateGoalDto) {
+    return this.goalsService.update(req.user.id, id, dto);
+  }
+
+  
   @Put(':id')
-  update(@Req() req, @Param('id') id: string, @Body() dto: UpdateGoalDto) {
+  updatePut(@Req() req, @Param('id') id: string, @Body() dto: UpdateGoalDto) {
     return this.goalsService.update(req.user.id, id, dto);
   }
 
@@ -45,3 +76,4 @@ export class GoalsController {
     return this.goalsService.contributions(req.user.id, id);
   }
 }
+
