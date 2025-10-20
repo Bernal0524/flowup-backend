@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-
-// Módulos
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { GoalsModule } from './modules/goals/goals.module';
-
-// Entidades
 import { User } from './modules/users/entities/user.entity';
 import { Transaction } from './modules/transactions/entities/transaction.entity';
 import { Goal } from './modules/goals/entities/goal.entity';
