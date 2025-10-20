@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
+
+// Módulos
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { GoalsModule } from './modules/goals/goals.module';
+
+// Entidades
 import { User } from './modules/users/entities/user.entity';
 import { Transaction } from './modules/transactions/entities/transaction.entity';
-import { DashboardModule } from './dashboard/dashboard.module';
+import { Goal } from './modules/goals/entities/goal.entity';
+import { GoalContribution } from './modules/goals/entities/goal-contribution.entity';
 
 @Module({
   imports: [
@@ -15,17 +21,19 @@ import { DashboardModule } from './dashboard/dashboard.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
+      port: parseInt(process.env.DATABASE_PORT as string, 10) || 5432,
       username: process.env.DATABASE_USER || 'flowup',
       password: process.env.DATABASE_PASSWORD || 'flowup',
       database: process.env.DATABASE_NAME || 'flowup',
-      entities: [User, Transaction],
-      synchronize: true, // DEV ONLY: usar migraciones en prod
+      entities: [User, Transaction, Goal, GoalContribution],
+      synchronize: true, 
     }),
     UsersModule,
     AuthModule,
     TransactionsModule,
     DashboardModule,
+    GoalsModule,
   ],
 })
 export class AppModule {}
+
