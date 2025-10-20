@@ -22,9 +22,9 @@ export class Goal {
   @Column({ type: 'varchar', length: 100 })
   title: string;
 
-  // Usamos NUMERIC para montos como en transactions
+  
   @Column({ name: 'target_amount', type: 'numeric', precision: 14, scale: 2 })
-  targetAmount: string; // string por compatibilidad con TypeORM/pg
+  targetAmount: string; 
 
   @Column({ name: 'current_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
   currentAmount: string;
@@ -48,3 +48,4 @@ export class Goal {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp with time zone' })
   updatedAt: Date;
 }
+
