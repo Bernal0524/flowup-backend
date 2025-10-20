@@ -49,7 +49,7 @@ export class TransactionsController {
     return this.transactionsService.findOne(req.user.id, id);
   }
 
-  // ✅ Método actualizado y seguro
+  
   @Put(':id')
   async updateTransaction(
     @Req() req,
