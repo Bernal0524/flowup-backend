@@ -42,7 +42,7 @@ export class TransactionsService {
     return tx;
   }
 
-  // 🔄 Actualizado para seguir el patrón del ejemplo Prisma
+  
   async update(userId: string, id: string, data: UpdateTransactionDto) {
     const transaction = await this.txRepo.findOne({ where: { id, userId } });
 
@@ -50,7 +50,7 @@ export class TransactionsService {
       throw new NotFoundException('Transacción no encontrada');
     }
 
-    const updated = this.txRepo.merge(transaction, data); // mezcla valores actuales y nuevos
+    const updated = this.txRepo.merge(transaction, data); 
     return this.txRepo.save(updated);
   }
 
