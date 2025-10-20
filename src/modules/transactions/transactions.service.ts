@@ -7,9 +7,15 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
-  constructor(@InjectRepository(Transaction) private txRepo: Repository<Transaction>) {}
+  constructor(
+    @InjectRepository(Transaction)
+    private txRepo: Repository<Transaction>,
+  ) {}
 
-  async findAll(userId: string, query: { type?: string; category?: string; q?: string; skip?: number; limit?: number }) {
+  async findAll(
+    userId: string,
+    query: { type?: string; category?: string; q?: string; skip?: number; limit?: number },
+  ) {
     const qb = this.txRepo.createQueryBuilder('tx').where('tx.userId = :userId', { userId });
 
     if (query.type) qb.andWhere('tx.type = :type', { type: query.type });
@@ -31,15 +37,21 @@ export class TransactionsService {
   }
 
   async findOne(userId: string, id: string) {
-    const tx = await this.txRepo.findOne({ where: { id, userId }});
-    if (!tx) throw new NotFoundException('Transaction not found');
+    const tx = await this.txRepo.findOne({ where: { id, userId } });
+    if (!tx) throw new NotFoundException('Transacción no encontrada');
     return tx;
   }
 
-  async update(userId: string, id: string, dto: UpdateTransactionDto) {
-    const tx = await this.findOne(userId, id);
-    Object.assign(tx, dto);
-    return this.txRepo.save(tx);
+  // 🔄 Actualizado para seguir el patrón del ejemplo Prisma
+  async update(userId: string, id: string, data: UpdateTransactionDto) {
+    const transaction = await this.txRepo.findOne({ where: { id, userId } });
+
+    if (!transaction) {
+      throw new NotFoundException('Transacción no encontrada');
+    }
+
+    const updated = this.txRepo.merge(transaction, data); // mezcla valores actuales y nuevos
+    return this.txRepo.save(updated);
   }
 
   async remove(userId: string, id: string) {
