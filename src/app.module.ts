@@ -14,6 +14,7 @@ import { IngresosModule } from './modules/ingresos/ingresos.module';
 import { GastosModule } from './modules/gastos/gastos.module';
 import { AhorrosModule } from './modules/ahorros/ahorros.module';
 import { CategoriasModule } from './modules/categorias/categorias.module';
+import { InversionesModule } from './modules/inversiones/inversiones.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CategoriasModule } from './modules/categorias/categorias.module';
     GastosModule,
     AhorrosModule,
     CategoriasModule,
+    InversionesModule,
   ],
 })
 export class AppModule {}
