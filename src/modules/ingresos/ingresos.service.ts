@@ -92,14 +92,27 @@ export class IngresosService {
 
  
   async update(userId: string, id: string, data: UpdateIngresoDto) {
-    const tx = await this.findOne(userId, id);
-    const merged = this.txRepo.merge(tx, {
-      ...data,
-      type: TxType.INCOME,                           // protegemos el tipo
-      amount: data.amount !== undefined ? String(data.amount) : tx.amount,
-    });
-    return this.txRepo.save(merged);
-  }
+  // 1) Asegura que existe y pertenece al usuario
+  await this.findOne(userId, id);
+
+  // 2) Construye PATCH solo con campos definidos
+  const patch: any = { type: TxType.INCOME }; // protegemos el tipo
+
+  if (data.description !== undefined) patch.description = data.description;
+  if (data.category !== undefined)    patch.category = data.category;
+  if (data.currency !== undefined)    patch.currency = data.currency;
+  if (data.amount !== undefined)      patch.amount   = String(data.amount);
+  if (data.date !== undefined)        patch.date     = new Date(data.date);
+
+  // 3) Actualiza por filtro (id + userId + type)
+  await this.txRepo.update(
+    { id, userId, type: TxType.INCOME },
+    patch,
+  );
+
+  // 4) Devuelve la fila ya persistida desde DB
+  return this.findOne(userId, id);
+}
 
  
   async remove(userId: string, id: string) {
