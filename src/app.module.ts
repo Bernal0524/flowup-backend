@@ -13,6 +13,7 @@ import { GoalContribution } from './modules/goals/entities/goal-contribution.ent
 import { IngresosModule } from './modules/ingresos/ingresos.module';
 import { GastosModule } from './modules/gastos/gastos.module';
 import { AhorrosModule } from './modules/ahorros/ahorros.module';
+import { CategoriasModule } from './modules/categorias/categorias.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AhorrosModule } from './modules/ahorros/ahorros.module';
     IngresosModule,
     GastosModule,
     AhorrosModule,
+    CategoriasModule,
   ],
 })
 export class AppModule {}
