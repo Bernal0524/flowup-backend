@@ -11,6 +11,7 @@ import { Transaction } from './modules/transactions/entities/transaction.entity'
 import { Goal } from './modules/goals/entities/goal.entity';
 import { GoalContribution } from './modules/goals/entities/goal-contribution.entity';
 import { IngresosModule } from './modules/ingresos/ingresos.module';
+import { GastosModule } from './modules/gastos/gastos.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { IngresosModule } from './modules/ingresos/ingresos.module';
     DashboardModule,
     GoalsModule,
     IngresosModule,
+    GastosModule,
   ],
 })
 export class AppModule {}
